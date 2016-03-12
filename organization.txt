@@ -3,3 +3,4 @@ Holidays:
 -Trooping the Colour,
 -St Patric's Day,
 -Groundhog Day
+-Pancake Day,
