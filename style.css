@@ -5,12 +5,21 @@ audio,canvas,video{display:inline-block;vertical-align:baseline}
 
 .header {
    color:#000;
-   background-color:#006bff;
+   background-color:#106bf1;
    padding:0.01em 16px
 }
 .nav {
    color:#000;
-   background-color:#eee;
+   background-color:#ddd;
    padding:0.01em 16px;
-   width:15%
+   display:inline-block;
+   float:left
+}
+.section {
+	float:left;
+	padding:0px 16px;
+	padding-right:25%;
+	display:inline-block;
+	white-space:pre-line;
+	width:80%
 }
