@@ -1,0 +1,9 @@
+-install python
+-open cmd.exe (pl. Wiersz Poleceñ)
+-write "d:" or "c:" (disk partition where you have this project saved) (without "" marks)
+[enter]
+-write "cd " and then path to this folder (for example: cd d:\gry\SchoolProject\)
+[enter]
+-write path to your python.exe  file (skip ".exe") + " -m http.server" 
+(for example d:\Python\python -m http.server)
+-write "http://localhost:8000/" in your web browser
