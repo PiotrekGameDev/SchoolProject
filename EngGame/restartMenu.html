@@ -1,0 +1,66 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+	<meta charset="UTF-8" />
+    <title>English Project Game</title>
+	<script type="text/javascript" src="js/phaser.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update, render: render});
+
+var buttons=[];
+
+function preload() {
+    game.load.image('skull', 'assets/skull.png');
+    game.load.image('button', 'assets/button.png');
+}
+
+function create() {
+    var skull = game.add.sprite(game.width/2, game.height/2-120, 'skull');
+    skull.anchor=new Phaser.Point(0.5,0.5);
+
+    respawnText = game.add.text(game.width/2, game.height/2, "What's the circumference of the moon?", { font: '30px Arial', fill: '#ffffff' });
+    respawnText.anchor=new Phaser.Point(0.5,0.5);
+    respawnText.fixedToCamera = true;
+    respawnText.inputEnabled=true;
+
+    var bw=0;
+    var bh=0;
+    var padding = 10;
+    for (b = 0; b < 4; b++) { 
+        var xi=0;
+        var yi=0;
+        if (b<2){
+            xi=b;
+        } else {
+            xi=b-2;
+            yi=1;
+        }
+        buttons[b] = game.add.button(game.width/2+xi*(bw+padding), game.height/2+80+yi*(bh+padding), 'button', function(){alert(buttons.indexOf(this));});
+        buttons[b].anchor=new Phaser.Point(0.5,0.5);
+        bw=buttons[b].width;
+        bh=buttons[b].height;
+        buttons[b].x-=bw/2+padding;
+    }
+}
+
+function update() {
+    
+}
+
+function render(){
+
+}
+
+</script>
+
+</body>
+</html>
