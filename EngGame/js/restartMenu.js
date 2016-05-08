@@ -1,24 +1,4 @@
-<!doctype html> 
-<html lang="en"> 
-<head> 
-	<meta charset="UTF-8" />
-    <title>English Project Game</title>
-	<script type="text/javascript" src="js/phaser.js"></script>
-    <style type="text/css">
-        body {
-            margin: 0;
-        }
-    </style>
-</head>
-<body>
-
-<script type="text/javascript">
-
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update, render: render});
-
-var buttons=[];
-
-function preload() {
+function rpreload() {
     game.load.image('skull', 'assets/skull.png');
     game.load.image('button', 'assets/button.png');
 }
@@ -28,12 +8,13 @@ var questions = [//A-0, B-1, C-2, D-3
     ["What's the sense of life?", "Yes", "There is no", "pi*r^2", "e=mc^2", 1]
 ];
 
+var buttons=[];
 var question;
 var menu;
 var answered;
 var bar;
 
-function create() {
+function rcreate() {
     menu = game.add.group();
 
     question = questions[game.rnd.integerInRange(0, questions.length-1)];
@@ -78,35 +59,47 @@ function create() {
         menu.add(buttons[b]);
         menu.add(t);
     }
+    menu.visible=false;
+    answered=true;
 }
 
 function buttonHandler (){
     if (!answered) {
         this.tint="0xff0000"
-        buttons[question[5]].tint="0x00ff00"
-        game.time.events.add(Phaser.Timer.SECOND/2, function(){game.add.tween(menu).to( { alpha: 0 }, 500, Phaser.Easing.Linear.None, true);}, this);
-        answered=true;
+       select();
          //alert("You clicked button "+buttons.indexOf(this));
     }
 }
 
-function update() {
+function rupdate() {
     if(!answered){
         bar.width-=game.time.elapsed*0.17;
         if (bar.width<0){
             bar.width=0;
-            buttons[question[5]].tint="0x00ff00"
-            game.time.events.add(Phaser.Timer.SECOND/2, function(){game.add.tween(menu).to( { alpha: 0 }, 500, Phaser.Easing.Linear.None, true);}, this);
-            answered=true;
+            select();
         }
     }
 }
 
-function render(){
-
+function select (){
+    buttons[question[5]].tint="0x00ff00"
+    game.time.events.add(Phaser.Timer.SECOND/2, function() {
+        game.add.tween(menu).to( { alpha: 0 }, 500, Phaser.Easing.Linear.None, true);
+        player.visible=true;
+        game.paused = false;
+        player.position = player.respawnPoint;
+        player.body.enable=true;
+    }, this);
+    answered=true;        
 }
 
-</script>
-
-</body>
-</html>
+function rshow () {
+    menu.visible=true;
+    menu.alpha=1;
+    answered=false;
+    game.tweens.removeAll();
+    bar.width*=1.5;
+    for (b = 0; b < 4; b++) { 
+        buttons[b].tint="0xffffff"
+    }
+}

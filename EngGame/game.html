@@ -4,19 +4,25 @@
 	<meta charset="UTF-8" />
     <title>English Project Game</title>
 	<script type="text/javascript" src="js/phaser.js"></script>
-    <style type="text/css">
-        body {
-            margin: 0;
-        }
-    </style>
+    <script type="text/javascript" src="js/restartMenu.js"></script>
+    <script src="/jquery-1.12.3.min.js"></script>
+
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+
+<div id="header">
+</div>
+
+<div id="nav">
+</div>
 
 <script type="text/javascript">
 
 var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update, render: render});
 
 function preload() {
+    rpreload();
 
     //  Tilemaps are split into two parts: The actual map data (usually stored in a CSV or JSON file) 
     //  and the tileset/s used to render the map.
@@ -36,15 +42,15 @@ function preload() {
 
     game.load.image('tiles', 'assets/super_mario.png');
     game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+
 }
 
 var map;
 var layer;
 var cursors;
 var player;
-var respawnText;
 var killzone=220;
-
+var navigation;
 
 function create() {
 
@@ -64,7 +70,11 @@ function create() {
 
     map.setCollisionBetween(12, 40);
 
-    player = game.add.sprite(1500, 48, 'dude', 1);
+    navigation=game.add.group();
+
+    map.createFromObjects('Navigation', 5, '', 0, true, false, navigation);
+
+    player = game.add.sprite(navigation.getAt(0).x, navigation.getAt(0).y, 'dude', 1);
     player.animations.add('left', [0, 1, 2, 3], 10, true);
     player.animations.add('right', [5, 6, 7, 8], 10, true);
 
@@ -78,14 +88,7 @@ function create() {
 
     cursors = game.input.keyboard.createCursorKeys();
 
-    var help = game.add.text(16, 16, 'Arrows to move', { font: '14px Arial', fill: '#ffffff' });
-    help.fixedToCamera = true;
-
-    respawnText = game.add.text(game.width/2, game.height/2, 'Respawn', { font: '60px Arial', fill: '#ffffff' });
-    respawnText.anchor=new Phaser.Point(0.5,0.5);
-    respawnText.fixedToCamera = true;
-    respawnText.inputEnabled=true;
-    respawnText.visible=false;
+    rcreate();
 
 }
 
@@ -124,11 +127,13 @@ function update() {
             player.body.velocity.y = -200;
         }
     }
-    if (player.y>killzone)
-    {
+    if (player.y>killzone && player.visible)
+    {   
         player.visible=false;
+        player.body.enable=false;
+        rshow();
+        /*
         game.paused=true;
-        respawnText.visible=true;
          game.input.onDown.add(function () {
             game.input.onDown.removeAll();
             player.visible=true;
@@ -136,13 +141,19 @@ function update() {
             respawnText.visible=false;
             player.position = player.respawnPoint;
         });
+        */
     }
+    if (Phaser.Point.distance(player.position, navigation.getAt(1).position)<20) {
+        alert("Yay! You won!");
+    }
+    rupdate();
 }
 
 function render(){
 
 }
-
+$("#header").load("/header.html");
+$("#nav").load("/links.html"); 
 </script>
 
 </body>
