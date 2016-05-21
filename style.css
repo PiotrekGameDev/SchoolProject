@@ -22,6 +22,9 @@ audio,canvas,video{display:inline-block;vertical-align:baseline}
 	display:inline-block;
 	white-space:pre-line
 }
+canvas {
+  padding:8px 8px;
+}
 
 h1,h2,h3,img,iframe {
     -webkit-margin-before: 0em;

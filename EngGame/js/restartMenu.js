@@ -22,6 +22,7 @@ function rcreate() {
     var skull = game.add.sprite(game.width/2, game.height/2-120, 'skull');
     skull.anchor=new Phaser.Point(0.5,0.5);
     menu.add(skull);
+    skull.fixedToCamera = true;
 
     var respawnText = game.add.text(game.width/2, game.height/2-20, question[0], { font: '30px Arial', fill: '#fff' });
     respawnText.anchor=new Phaser.Point(0.5,0.5);
@@ -30,10 +31,10 @@ function rcreate() {
     menu.add(respawnText);
 
     bar = game.add.sprite(game.width/2, game.height/2+20, 'button');
-    bar.width*=1.5;
-    bar.height*=0.5;
+    bar.height=37;
     bar.anchor=new Phaser.Point(0.5,0.5);
     menu.add(bar);
+    bar.fixedToCamera = true;
 
     var bw=0;
     var bh=0;
@@ -58,6 +59,8 @@ function rcreate() {
         t.anchor=new Phaser.Point(0.5,0.5);
         menu.add(buttons[b]);
         menu.add(t);
+        buttons[b].fixedToCamera = true;
+        t.fixedToCamera = true;
     }
     menu.visible=false;
     answered=true;
@@ -66,7 +69,7 @@ function rcreate() {
 function buttonHandler (){
     if (!answered) {
         this.tint="0xff0000"
-       select();
+       select(buttons.indexOf(this)==question[5]);
          //alert("You clicked button "+buttons.indexOf(this));
     }
 }
@@ -76,30 +79,51 @@ function rupdate() {
         bar.width-=game.time.elapsed*0.17;
         if (bar.width<0){
             bar.width=0;
-            select();
+            select(false);
         }
     }
+    game.debug.text("menu.visible: "+menu.visible, 10, 30 );
+    game.debug.text("navigation.getAt(0).x: "+navigation.getAt(0).x, 10, 30+25 );
 }
 
-function select (){
-    buttons[question[5]].tint="0x00ff00"
+var rshowed=false;
+
+function select (a){
+    buttons[question[5]].tint="0x00ff00";
     game.time.events.add(Phaser.Timer.SECOND/2, function() {
-        game.add.tween(menu).to( { alpha: 0 }, 500, Phaser.Easing.Linear.None, true);
-        player.visible=true;
-        game.paused = false;
-        player.position = player.respawnPoint;
-        player.body.enable=true;
+        var t=game.add.tween(menu).to( { alpha: 0}, 200, Phaser.Easing.Linear.None, true);
+        t.onComplete.add(function(){
+            menu.visible=false;
+            rshowed=false;
+        });
+        respawn(a);
     }, this);
     answered=true;        
 }
 
 function rshow () {
+    console.log("show");
+    rshowed=true;
     menu.visible=true;
     menu.alpha=1;
     answered=false;
     game.tweens.removeAll();
-    bar.width*=1.5;
+    bar.width=1.5*220;
     for (b = 0; b < 4; b++) { 
         buttons[b].tint="0xffffff"
     }
+}
+
+function respawn(toLast){
+    player.visible=true;
+    if (toLast){
+        player.position = player.respawnPoint;
+        console.log("to last");
+    } else {
+        player.position.x = navigation.getAt(0).x;
+        player.position.y = navigation.getAt(0).y;
+
+        console.log("to begin "+navigation.getAt(0).position);
+    }
+    player.body.allowGravity=true;
 }
