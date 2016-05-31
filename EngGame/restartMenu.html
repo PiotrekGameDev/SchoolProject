@@ -22,10 +22,18 @@ function preload() {
     game.load.image('skull', 'assets/skull.png');
     game.load.image('button', 'assets/button.png');
 }
-
+function random(high,low) {
+    high++;
+    return Math.floor((Math.random())*(high-low))+low;
+}
 var questions = [//A-0, B-1, C-2, D-3
-    ["What's the circumference of the moon?", "Yes", "No", "1000m", "Moon is a lie", 3],
-    ["What's the sense of life?", "Yes", "There is no", "pi*r^2", "e=mc^2", 1]
+    ["When is Independence Day Celebrated?", "4th July", "6th July", "4th May", "1st June", 0],
+    ["Who wasn't a member of Comitee of Five?", "Roger Sherman", "Thomas Jefferson", "Benjamin Franklin", "Adam Johns", 3],
+    ["Which congress voted for independence of the USA?", "1st Continental", "2nd Continental", "2nd Federal", "International", 1],
+    ["What was voted on July 2?", "USA constitution", "Making 4th July a federal holiday", "Declaration of Independence", "true", 2],
+    ["How many stripes does the USA flag have?", "13", "12", "50", "2", 0],
+    ["How many stars does the USA flag have?", "3", "12", "10", "50", 3],
+    ["Who uses the Great Seal?", "US president", "US goverment", "Comitee of Five", "Every American", 1]
 ];
 
 var question;
@@ -36,7 +44,7 @@ var bar;
 function create() {
     menu = game.add.group();
 
-    question = questions[game.rnd.integerInRange(0, questions.length-1)];
+    question = questions[random(0, questions.length-1)];
 
     var skull = game.add.sprite(game.width/2, game.height/2-120, 'skull');
     skull.anchor=new Phaser.Point(0.5,0.5);

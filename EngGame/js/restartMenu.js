@@ -2,29 +2,41 @@ function rpreload() {
     game.load.image('skull', 'assets/skull.png');
     game.load.image('button', 'assets/button.png');
 }
-
+function random(high,low) {
+    high++;
+    return Math.floor((Math.random())*(high-low))+low;
+}
 var questions = [//A-0, B-1, C-2, D-3
-    ["What's the circumference of the moon?", "Yes", "No", "1000m", "Moon is a lie", 3],
-    ["What's the sense of life?", "Yes", "There is no", "pi*r^2", "e=mc^2", 1]
+    ["When is Independence Day Celebrated?", "4th July", "6th July", "4th May", "1st June", 0],
+    ["Who wasn't a member of Comitee of Five?", "Roger Sherman", "Thomas Jefferson", "Benjamin Franklin", "Adam Johns", 3],
+    ["Which congress voted for independence of the USA?", "1st Continental", "2nd Continental", "2nd Federal", "International", 1],
+    ["What was voted on July 2?", "USA constitution", "Making America great again", "Declaration of Independence", "true", 2],
+    ["How many stripes does the USA flag have?", "13", "12", "50", "2", 0],
+    ["How many stars does the USA flag have?", "3", "12", "10", "50", 3],
+    ["When was current USA flag adopted?", "in 2000", "in 1777", "in 1960", "in 1860", 2],
+    ["Which country American fight for independence?", "Great Britain", "Poland", "Germany", "Canada", 0],
+    ["Who uses the Great Seal?", "US president", "US goverment", "Comitee of Five", "Every American", 1]
 ];
 
 var buttons=[];
+var t=[];
 var question;
 var menu;
 var answered;
 var bar;
+var respawnText;
 
 function rcreate() {
     menu = game.add.group();
 
-    question = questions[game.rnd.integerInRange(0, questions.length-1)];
+    question = questions[random(0, questions.length-1)];
 
     var skull = game.add.sprite(game.width/2, game.height/2-120, 'skull');
     skull.anchor=new Phaser.Point(0.5,0.5);
     menu.add(skull);
     skull.fixedToCamera = true;
 
-    var respawnText = game.add.text(game.width/2, game.height/2-20, question[0], { font: '30px Arial', fill: '#fff' });
+    respawnText = game.add.text(game.width/2, game.height/2-20, question[0], { font: '20px Arial', fill: '#fff' });
     respawnText.anchor=new Phaser.Point(0.5,0.5);
     respawnText.fixedToCamera = true;
     respawnText.inputEnabled=true;
@@ -55,12 +67,12 @@ function rcreate() {
         bw=buttons[b].width;
         bh=buttons[b].height;
         buttons[b].x-=bw/2+padding;
-        var t = game.add.text(buttons[b].x, buttons[b].y, String.fromCharCode(65+b)+": "+question[b+1],  {font: "20px Arial", fill: "#000", align: "left"});
-        t.anchor=new Phaser.Point(0.5,0.5);
+        t[b] = game.add.text(buttons[b].x, buttons[b].y, String.fromCharCode(65+b)+": "+question[b+1],  {font: "14px Arial", fill: "#000", align: "left"});
+        t[b].anchor=new Phaser.Point(0.5,0.5);
         menu.add(buttons[b]);
-        menu.add(t);
+        menu.add(t[b]);
         buttons[b].fixedToCamera = true;
-        t.fixedToCamera = true;
+        t[b].fixedToCamera = true;
     }
     menu.visible=false;
     answered=true;
@@ -76,14 +88,12 @@ function buttonHandler (){
 
 function rupdate() {
     if(!answered){
-        bar.width-=game.time.elapsed*0.17;
+        bar.width-=game.time.elapsed*0.02;
         if (bar.width<0){
             bar.width=0;
             select(false);
         }
     }
-    game.debug.text("menu.visible: "+menu.visible, 10, 30 );
-    game.debug.text("navigation.getAt(0).x: "+navigation.getAt(0).x, 10, 30+25 );
 }
 
 var rshowed=false;
@@ -102,7 +112,8 @@ function select (a){
 }
 
 function rshow () {
-    console.log("show");
+    question = questions[random(0, questions.length-1)];
+    respawnText.text=question[0];
     rshowed=true;
     menu.visible=true;
     menu.alpha=1;
@@ -111,6 +122,7 @@ function rshow () {
     bar.width=1.5*220;
     for (b = 0; b < 4; b++) { 
         buttons[b].tint="0xffffff"
+        t[b].text=question[b+1];
     }
 }
 
